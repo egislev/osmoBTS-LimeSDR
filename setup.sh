@@ -3,7 +3,7 @@ build ()	{
     echo -n "Running configure ... "
     ./configure -silent
     echo -n "Done.\nRunning make ..."
-    make -j4 --silent
+    make -j4
     echo "Done"
     make install
     ldconfig
