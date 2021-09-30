@@ -1,0 +1,12 @@
+[Unit]
+Description=Osmocom Base Station Controller (BSC)
+Wants=osmo-mgw.service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/osmo-bsc -c /etc/osmoBTS/osmo-bsc.cfg -s
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
