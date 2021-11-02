@@ -1,0 +1,17 @@
+[Unit]
+Description=Osmocom Mobile Switching Center (MSC)
+Wants=osmo-hlr.service
+Wants=osmo-mgw.service
+Wants=osmo-bsc.service
+Wants=osmo-pcu.service
+After=osmo-pcu.service
+#After=osmo-hnbgw.service
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/osmo-sgsn -c /etc/osmoBTS/osmo-sgsn.cfg
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
