@@ -1,0 +1,31 @@
+#!/bin/bash
+if [ "$EUID" -ne 0 ]
+  then echo "Please run this script as root !"
+  exit
+fi
+echo -n "Disable Amarisoft LTE & start osmoBTS ? [y/n] : "
+read a
+if [ "$a" != "${a#[Yy]}" ] ;then
+    echo -n "Stoping LTE ... "
+    systemclt stop lte.service
+    systemctl disable lte.service
+    echo "Done."
+    echo -n "Enabling osmoBTS ... "
+    systemctl enable osmo-bsc.service
+    systemctl enable osmo-hlr.service
+    systemctl enable osmo-msc.service
+    systemctl enable osmo-trx-lms.service
+    systemctl enable osmo-bts-trx.service
+    systemctl enable osmo-mgw.service
+    systemctl enable osmo-stp.service
+    echo "Done."
+    echo -n "Starting osmoBTS ... "
+    systemctl restart osmo-bsc.service
+    systemctl restart osmo-hlr.service
+    systemctl restart osmo-msc.service
+    systemctl restart osmo-trx-lms.service
+    systemctl restart osmo-bts-trx.service
+    systemctl restart osmo-mgw.service
+    systemctl restart osmo-stp.service
+    echo "Done."
+fi
