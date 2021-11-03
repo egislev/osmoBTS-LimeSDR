@@ -1,0 +1,217 @@
+arfcn = 871 = TX - 1877 Mhz RX - 1783 Mhz
+arfcn = 100 = TX - 955 Mhz
+
+Install :
+ 
+sudo apt install build-essential git g++ libtool libortp-dev dahdi-source libsctp-dev shtool autoconf automake git-core pkg-config make gcc cmake libusb-1.0-0-dev libusb-dev libpcsclite-dev libtalloc-dev libortp-dev libsctp-dev libmnl-dev libdbi-dev libdbd-sqlite3 libsqlite3-dev sqlite3 libc-ares-dev libgnutls-dev libfftw3-dev 
+
+
+ 1 - libosmocore
+ 2 - libosmo-abis
+ 3 - libosmo-netif
+ 4 - libosmo-sccp
+ 5 - osmo-hlr
+ 6 - osmo-ggsn
+ 7 - osmo-sgsn
+ 8 - osmo-pcu
+ 9 - osmo-mgw
+ 9 - osmo-msc
+10 - osmo-bsc
+11 - osmo-bts (cp src/osmo-bts-trx /usr/local/bin) 
+12 - odmo-trx 
+
+10 - osmo-msc
+
+mkdir /var/lib/osmocom
+
+systemctl daemon-reload
+hlr -> /var/lib/osmocom
+
+Needed software :
+1. osmo-bsc
+2. osmo-trx-lms (osmo-trx)
+3. osmo-bts-trx
+4. osmo-stp (libosmo-sccp)
+5. osmo-msc
+6. osmo-hlr
+7. osmo-mgw
+
+Libraries :
+1. libasn1c
+2. libosmo-abis
+3. libosmo-netif
+4. libosmo-sccp
+5. libosmocore
+6. libsmpp34
+
+Dependencies :
+
+osmo-trx-lms
+	lksctp-tools
+	limesuite-dev
+	libosmotty4
+	libosmogsm13
+	libosmoctrl0
+	libosmocore12
+	libLimeSuite20.01
+osmo-bts
+	libosmotrau2
+	libosmocoding0
+	libosmocodec
+	libosmoalias6
+	libortp13
+	libmbedx509-0
+	libmedtls12
+	libmbedcrypto3
+	libctogmx1 ???
+osmo-msc
+	libosmo-ranap3
+	libosmo-gsup-client0
+	libasn1c0
+osmo-bsc <none>
+osmo-hlr
+	libdbi3
+	libdbi-driver-dbd-sqlite3
+osmo-bsc
+	libosmonetif8
+	libosmo-sigtran5
+	libosmo-mgcp-client6
+osmo-pcu
+	libosmogb9
+osmo-sgsn
+	libgtp6
+osmo-ggsn <none>	
+
+
+
+Must install too : sudo apt install libpcsclite-dev libtalloc-dev libortp-dev libsctp-dev libmnl-dev libdbi-dev libi2c-dev libdbd-sqlite3 libsqlite3-dev sqlite3 libc-ares-dev libgnutls-dev libfftw3-dev
+
+Compilation :
+ cd <work_dir>
+ autoreconf -fi
+ ./configure
+ make -j<nCPU>
+ sudo make install
+ sudo ldconfig
+
+Compile osmo-trx-lms with "./configure --with-lms"
+
+Startup order :
+1 - osmo-hlr+
+2 - osmo-mgw+
+3 - osmo-msc+
+4 - osmo-bsc+
+5 - osmo-stp+
+6 - osmo-bts-trx+
+7 - osmo-trx-lms+
+
+Network setup :
+	sysctl -w net.ipv4.ip_forward=1
+	iptables -A FORWARD -s 10.1.0.0/24 -j ACCEPT
+	iptables -A FORWARD -d 10.1.0.0/24 -j ACCEPT
+	iptables -t nat -A POSTROUTING -o enp0s31f6 -s 10.1.0.0/24 -j MASQUERADE
+	
+Subscirbers configuration : 
+  telnet localhost 4258
+   enable
+   subscriber ...
+   
+Some usefull information :
+   
+   https://osmocom.org/projects/cellular-infrastructure/wiki/Build_from_Source
+   https://www.osmocom.org/projects/cellular-infrastructure/wiki/Port_Numbers
+   http://projects.osmocom.org/projects/cellular-infrastructure/wiki/Osmocom_Network_In_The_Box
+   https://sudonull.com/post/68527-Add-GPRS-to-your-home-GSM-network-Pentestit-Blog
+   https://projects.osmocom.org/projects/cellular-infrastructure/wiki/OpenBSC_GPRS
+   https://github.com/Rhizomatica/gprs_configs
+   https://www.osmocom.org/projects/cellular-infrastructure/wiki/Osmocom_Network_In_The_Box
+   https://lists.osmocom.org/pipermail/osmocom-net-gprs/2018-August/001038.html
+   https://www.rfwireless-world.com/calculators/GSM-ARFCN-frequency-converter-calculator.html
+   https://webhamster.ru/mytetrashare/index/mtb0/28   
+
+Below is a list of TCP/UDP port numbers as it is used by Osmocom GSM related software.
+
+L4	Port Number	Purpose	Software
+UDP	2427	MGCP GW	osmo-bsc_mgcp, OsmoMGW
+TCP	2775	SMPP	OsmoMSC, OsmoNITB
+SCTP	2905	M3UA	OsmoSTP
+TCP	3002	A-bis/IP OML	OsmoBTS, OsmoBSC, OsmoNITB
+TCP	3003	A-bis/IP RSL	OsmoBTS, OsmoBSC, OsmoNITB
+TCP	4200-4219	OsmoCC	osmo-cc
+TCP	4222	GSUP	OsmoHLR
+TCP	4227	telnet (VTY)	osmo-pcap-client
+TCP	4228	telnet (VTY)	osmo-pcap-server
+TCP	4236	Control Interface	OsmoTRX
+TCP	4237	telnet (VTY)	OsmoTRX
+TCP	4238	Control Interface	OsmoBTS
+TCP	4239	telnet (VTY)	OsmoSTP
+TCP	4240	telnet (VTY)	OsmoPCU
+TCP	4241	telnet (VTY)	OsmoBTS
+TCP	4242	telnet (VTY)	OsmoNITB, OsmoBSC, cellmgr_ng
+TCP	4243	telnet (VTY)	OsmoMGW, osmo-bsc_mgcp
+TCP	4244	telnet (VTY)	osmo-bsc_nat
+TCP	4245	telnet (VTY)	OsmoSGSN
+TCP	4246	telnet (VTY)	osmo-gbproxy
+TCP	4247	telnet (VTY)	OsmocomBB
+TCP	4249	Control Interface	OsmoNITB/OsmoBSC
+TCP	4250	Control Interface	osmo-bsc_nat
+TCP	4251	Control Interface	OsmoSGSN
+TCP	4252	telnet (VTY)	sysmobts-mgr
+TCP	4253	telnet (VTY)	OsmoGTPHub
+TCP	4254	telnet (VTY)	OsmoMSC
+TCP	4255	Control Interface	OsmoMSC
+TCP	4256	telnet (VTY)	Osmo-sip-connector
+TCP	4257	Control Interface	OpenGGSN/OsmoGGSN
+TCP	4258	telnet (VTY)	OsmoHLR
+TCP	4259	Control Interface	OsmoHLR
+TCP	4260	telnet (VTY)	OsmoGGSN
+TCP	4261	telnet (VTY)	OsmoHNBGW
+TCP	4262	Control Interface	OsmoHNBGW
+TCP	4263	Control Interface	osmo-gbproxy
+TCP	4264	telnet (VTY)	osmo-cbc
+TCP	4265	Control Interface	osmo-cbc
+UDP	4266	D-GSM MS Lookup: mDNS server	osmo-hlr
+TCP	4267	Control Interface	osmo-mgw
+TCP	4268	telnet (VTY)	osmo-uecups
+SCTP	4268	UECUPS	osmo-uecups
+TCP	4269	telnet (VTY)	osmo-e1d
+TCP	4271	telnet (VTY)	OsmoSMLC
+TCP	4272	Control Interface	OsmoSMLC
+UDP	4729	GSMTAP	Almost every osmocom project
+TCP	5000	A/IP	osmo-bsc_nat
+UDP	23000	NS-over-IP	OsmoSGSN,OsmoPCU,osmo-gbproxy
+TCP	48049	CBSP (CBC)	OsmoBSC,osmo-cbc
+
+If you are continuously working with osmocom software, as a convenience helper, you might add something like
+
+osmo-pcap-client        4227/tcp
+osmo-pcap-server        4228/tcp
+osmo-stp                4239/tcp
+osmo-pcu                4240/tcp
+osmo-bts                4241/tcp
+osmo-bsc                4242/tcp        osmo-nitb
+osmo-mgw                4243/tcp        osmo-bsc_mgcp
+osmo-bsc_nat            4244/tcp
+osmo-sgsn               4245/tcp
+osmo-gbproxy            4246/tcp
+osmocombb               4247/tcp
+sysmobts-mgr            4252/tcp
+osmo-gtp-hub            4253/tcp
+osmo-msc                4254/tcp
+osmo-sip-connector      4256/tcp
+osmo-hlr                4258/tcp
+osmo-ggsn               4260/tcp
+osmo-cbc                4264/tcp
+osmo-uecups             4268/tcp
+osmo-e1d                4269/tcp
+
+Fond bugs :
+	1. after libosmocore "git pull" lms do not starts without any messages
+
+!!! Do not use SIM cards with same IMSI !!!
+SIM cards from regular operators are working the same as USIM cards (with roaming)
+
+
+
+
+
