@@ -1,11 +1,11 @@
 [Unit]
 Description=Osmocom GGSN
-Wants=osmo-hlr.service
-Wants=osmo-mgw.service
-Wants=osmo-bsc.service
-Wants=osmo-pcu.service
-Wants=osmo-sgsn.service
-After=osmo-sgsn.service
+#Wants=osmo-hlr.service
+#Wants=osmo-mgw.service
+#Wants=osmo-bsc.service
+#Wants=osmo-pcu.service
+#Wants=osmo-sgsn.service
+#After=osmo-sgsn.service
 #After=osmo-hnbgw.service
 
 [Service]

@@ -35,7 +35,9 @@ Needed software :
 5. osmo-msc
 6. osmo-hlr
 7. osmo-mgw
-
+8. osmo-pcu
+9. osmo-sgsn
+10. osmo-ggs
 Libraries :
 1. libasn1c
 2. libosmo-abis
@@ -97,13 +99,16 @@ Compilation :
 Compile osmo-trx-lms with "./configure --with-lms"
 
 Startup order :
-1 - osmo-hlr+
-2 - osmo-mgw+
-3 - osmo-msc+
-4 - osmo-bsc+
-5 - osmo-stp+
-6 - osmo-bts-trx+
-7 - osmo-trx-lms+
+ 1 - osmo-hlr+
+ 2 - osmo-mgw+
+ 3 - osmo-msc+
+ 4 - osmo-bsc+
+ 5 - osmo-stp+
+ 6 - osmo-bts-trx+
+ 7 - osmo-trx-lms+
+ 8 - osmo-pcu
+ 9 - osmo-sgsn
+10 - osmo-ggsn
 
 Network setup :
 	sysctl -w net.ipv4.ip_forward=1

@@ -1,0 +1,44 @@
+#!/bin/bash
+if [ "$EUID" -ne 0 ]
+  then echo "Please run this script as root !"
+  exit
+fi
+echo -n "Disable osmoBTS & Amarisoft services ? [y/n] : "
+read a
+if [ "$a" != "${a#[Yy]}" ] ;then
+    echo -n "Stoping & disabling osmoBTS ... "
+    systemctl stop osmo-bsc.service
+    systemctl stop osmo-hlr.service
+    systemctl stop osmo-msc.service
+    systemctl stop osmo-trx-lms.service
+    systemctl stop osmo-bts-trx.service
+    systemctl stop osmo-mgw.service
+    systemctl stop osmo-stp.service
+    systemctl stop osmo-pcu.service
+    systemctl stop osmo-sgsn.service
+    systemctl stop osmo-ggsn.service
+    systemctl disable osmo-bsc.service
+    systemctl disable osmo-hlr.service
+    systemctl disable osmo-msc.service
+    systemctl disable osmo-trx-lms.service
+    systemctl disable osmo-bts-trx.service
+    systemctl disable osmo-mgw.service
+    systemctl disable osmo-stp.service
+    systemctl disable osmo-pcu.service
+    systemctl disable osmo-sgsn.service
+    systemctl disable osmo-ggsn.service
+    echo -n "Stoping & disabling Amarisoft LTE ... "
+    systemctl stop lte.service
+    systemctl disable lte.service
+    echo "Done."
+fi
+echo -n "Delete configuration files in /etc/osmoBTS ? [y/n] : "
+read a
+if [ "$a" != "${a#[Yy]}" ] ;then
+    rm -rf /etc/osmoBTS
+fi
+echo -n "Delete system startup files in /lib/systemd/system ? [y/n] : "
+read a
+if [ "$a" != "${a#[Yy]}" ] ;then
+    rm /lib/systemd/system/osmo*
+fi

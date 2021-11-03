@@ -1,8 +1,8 @@
 [Unit]
 Description=Osmocom Mobile Switching Center (MSC)
-Wants=osmo-hlr.service
-Wants=osmo-mgw.service
-After=osmo-hlr.service
+#Wants=osmo-hlr.service
+#Wants=osmo-mgw.service
+#After=osmo-hlr.service
 #After=osmo-hnbgw.service
 
 [Service]
