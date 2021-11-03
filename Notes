@@ -210,7 +210,7 @@ osmo-cbc                4264/tcp
 osmo-uecups             4268/tcp
 osmo-e1d                4269/tcp
 
-Fond bugs :
+Found bugs :
 	1. after libosmocore "git pull" lms do not starts without any messages
 
 !!! Do not use SIM cards with same IMSI !!!
